@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Image App</title>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png">
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    {% if image_file %}
+        <h2>Original Image</h2>
+        <img src="{{ image_file }}" alt="Uploaded Image" width="400">
+        
+        <h2>Extracted Text</h2>
+        <p>{{ dob_text }}</p>
+
+        <h2>Detect Faces</h2>
+
+        <div style="border: 2px solid red; margin-bottom: 10px;">
+            <img src="{{ image_file_face }}" alt="Uploaded Image" width="400">
+            <p>Extracted license_text: "{{ license_text }}"</p>
+            <p>Extracted DOB: "{{ dob_text }}"</p>
+        </div>
+
+        
+
+    {% endif %}
+
+</body>
+</html>
+
