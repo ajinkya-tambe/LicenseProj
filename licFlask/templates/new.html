@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #output-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Detection</h1>
+    <h1>Upload Image</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png">
+        <button type="submit">Upload</button>
+    </form>
+    
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file-input" accept="image/*" required>
+        <button type="button" onclick="uploadImage()">Detect Face</button>
+    </form>
+
+    <div id="output-container">
+        <!-- Display the extracted face image here -->
+    </div>
+
+    <script>
+        function uploadImage() {
+            var input = document.getElementById('file-input');
+            var file = input.files[0];
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/detect_face', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayResult(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function displayResult(data) {
+            //await (5000);
+            var outputContainer = document.getElementById('output-container');
+            outputContainer.innerHTML = '';
+
+            if (data.success) {
+                var img = document.createElement('img');
+                // img.src = 'data:image/jpg;base64,' + data.face_image;
+                // img.src = 'data:image/jpg;base64,' + data.face_image_name;
+                // setTimeout(5000);
+                img.src = data.face_image_path;
+                outputContainer.appendChild(img);
+                console.log(data.face_image_path);
+                img.alt = 'Detected Face';
+                //outputContainer.appendChild(img);
+            } else {
+                outputContainer.innerText = 'Error processing the image.';
+            }
+        }
+    </script>
+</body>
+</html>

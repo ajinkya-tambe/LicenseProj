@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Image App</title>
-    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="container">
-
     <h1>Upload Image</h1>
     <form method="post" id="myForm" enctype="multipart/form-data">
         <input type="file" name="file" accept=".jpg, .jpeg, .png">
@@ -23,40 +20,38 @@
         <h2>Original Image</h2>
         <img src="{{ image_file }}" alt="Uploaded Image" width="400">
         
+        <!-- verify -->
+        <button >verify</button>
 
-    <div class="licVerifyBtn">
-        <button style="margin: 20px;" type="button" class="btn" id="lic_verify_btn" onclick="fetchRequestId()">Verify</button>
-        <p id="lic">"{{ license_text }}"</p>
-        <p id="dob">"{{ dob_text }}"</p>
-    </div>
         <h2>Detect Faces</h2>
 
         <div style="border: 2px solid red; margin-bottom: 10px;">
             <img src="{{ image_file_face }}" alt="Uploaded Image" width="400">
-            <p id="lic">"{{ license_text }}"</p>
-            <p id="dob">"{{ dob_text }}"</p>
+            <p>Extracted license_text: "{{ license_text }}"</p>
+            <p>Extracted DOB: "{{ dob_text }}"</p>
         </div>
 
         
 
     {% endif %}
-    </div>
+
 
 </body>
 </html>
 
 <script>
+    window.onload = function() {
+        // When the page loads, clear the form data
+        document.getElementById('myForm').reset();
+    };
+
     const fetchRequestId = async () => {
-        var licNo = document.getElementById("lic").innerText.trim().replace(/^"|"$/g, '');
-        var dob = document.getElementById("dob").innerText.trim().replace(/^"|"$/g, '');
-
-
-        console.log(licNo);
-        console.log(dob);
-
+            var licNo = document.getElementById("lic").value;
+            var dob = document.getElementById("dob").value;
+            // console.log(licNo);
 
             const myHeaders = new Headers();
-            myHeaders.append("X-RapidAPI-Key", "6218629f60msh3ff7e28134aa565p1fb9fajsn438709e50f40");
+            myHeaders.append("X-RapidAPI-Key", "69dbe67a2emsh599b4412cf9d359p177cfajsnf56ff134d551");
             myHeaders.append("X-RapidAPI-Host", "driving-license-verification.p.rapidapi.com");
             myHeaders.append("Content-Type", "application/json");
 
@@ -93,7 +88,7 @@
         
         const getData = async (reqq) => {
             const myHeaders = new Headers();
-            myHeaders.append("X-RapidAPI-Key", "6218629f60msh3ff7e28134aa565p1fb9fajsn438709e50f40");
+            myHeaders.append("X-RapidAPI-Key", "69dbe67a2emsh599b4412cf9d359p177cfajsnf56ff134d551");
             myHeaders.append("X-RapidAPI-Host", "driving-license-verification.p.rapidapi.com");
 
             const requestOptions = {
@@ -102,8 +97,7 @@
             redirect: "follow"
             };
 
-            var licNo = document.getElementById("lic").innerText.trim().replace(/^"|"$/g, '');
-            var dob = document.getElementById("dob").innerText.trim().replace(/^"|"$/g, '');
+            var licNo = document.getElementById("lic").value;
             var licVerifyBtn = document.getElementById("lic_verify_btn");
             
             console.log(reqq);
@@ -111,10 +105,10 @@
             .then((response) => response.json())
             .then((result) => {
                 console.log(result);
-                console.log(result[0].result.source_output.id_number.toLowerCase() + " " + licNo.toLowerCase().replace(' ', ''));
+                console.log(result[0].result.source_output.id_number.toLowerCase().trim() + " " + licNo.toLowerCase().trim());
                 if (
                     
-                    result[0].result.source_output.id_number.toLowerCase() == licNo.toLowerCase().replace(' ', '')
+                    result[0].result.source_output.id_number.toLowerCase().trim() == licNo.toLowerCase().trim()
                 ) {
                     licVerifyBtn.innerText = "Verified";
                     licVerifyBtn.disabled = true;

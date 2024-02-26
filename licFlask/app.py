@@ -80,12 +80,16 @@ def index():
 
             for line in text.split('\n'):
                 if 'license' in line.lower():
-                    lic_text = line
+                    lic_text = line.replace('License No. : ', '')[:16]
                 if 'dob' in line.lower():
-                    dob_text = line
+                    if 'DOB : ' in line:
+                        dob_text = line.replace('DOB : ', '')[:10]
+                    else:
+                        dob_text = line.replace('DOB ', '')[:10]
 
+                    
                 
-            return render_template('index.html', image_file=image_path, image_file_face=extracted_face_path, license_text=lic_text, dob_text=dob_text)
+            return render_template('index.html',image_file=image_path, image_file_face=extracted_face_path, license_text=lic_text, dob_text=dob_text)
 
     return render_template('index.html')
 
